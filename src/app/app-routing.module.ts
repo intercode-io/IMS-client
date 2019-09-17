@@ -7,6 +7,8 @@ import { AuthService } from './services/auth.service';
 import { AuthCallbackComponent } from './auth-callback/auth-callback.component';
 
 import { CallApiComponent } from './call-api/call-api.component';
+import { DashboardComponent } from "./dashboard/dashboard.component";
+import {ProjectsComponent} from "./dashboard/projects/projects.component";
 
 const routes: Routes = [
   {
@@ -21,6 +23,13 @@ const routes: Routes = [
   {
     path: 'auth-callback',
     component: AuthCallbackComponent
+  },
+  {
+    path: 'dashboard',
+    component: DashboardComponent,
+    children: [
+      {path: 'projects', component: ProjectsComponent}
+    ]
   },
   {
     path: 'call-api',
