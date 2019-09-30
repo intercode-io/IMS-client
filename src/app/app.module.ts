@@ -17,32 +17,40 @@ import { ProjectsComponent } from './dashboard/projects/projects.component';
 import { ModalAddProjectComponent } from './dashboard/projects/modal-add-project/modal-add-project.component';
 import { FormAddProjectComponent } from './dashboard/projects/modal-add-project/form-add-project/form-add-project.component';
 import { ReactiveFormsModule } from '@angular/forms';
-import {HttpService} from "../services/http.service";
+import {BaseHttpService} from "../services/baseHttp.service";
 import {ProjectHttpService} from "../services/project.http.service";
+import {MatTableModule} from '@angular/material/table';
+import { ActivityComponent } from './dashboard/activity/activity.component';
+import { TrackerComponent } from './dashboard/tracker/tracker.component';
+import {DataService} from "./dashboard/activity/Services/DataService";
 
 @NgModule({
   declarations: [
     AppComponent,
     ProtectedComponent,
     AuthCallbackComponent,
-    DashboardComponent,
     CallApiComponent,
     TopComponent,
     LeftAdminComponent,
     ProjectsComponent,
     ModalAddProjectComponent,
-    FormAddProjectComponent
+    FormAddProjectComponent,
+    DashboardComponent,
+    ActivityComponent,
+    TrackerComponent
   ],
   imports: [
+    NgbModule,
     BrowserModule,
     AppRoutingModule,
     HttpClientModule,
     ReactiveFormsModule,
-    NgbModule
+    MatTableModule
   ],
   providers: [
-    HttpService,
-    ProjectHttpService
+    BaseHttpService,
+    ProjectHttpService,
+    DataService
   ],
   bootstrap: [AppComponent]
 })

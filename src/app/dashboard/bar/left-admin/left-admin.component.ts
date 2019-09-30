@@ -25,15 +25,15 @@ export class LeftAdminComponent implements OnInit {
     new LinkListItem(
       "nav-item",
       "sidebar-link",
-      "projects",
+      "/dashboard/projects",
       "Projects",
       "c-red-500 ti-briefcase"
     ),
     new LinkListItem(
       "nav-item",
       "sidebar-link",
-      "dashboard",
-      "Email",
+      "/dashboard/activity",
+      "My Activity",
       "c-brown-500 ti-email"
     ),
     new LinkListItem(

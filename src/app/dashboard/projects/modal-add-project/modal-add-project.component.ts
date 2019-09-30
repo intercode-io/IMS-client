@@ -1,7 +1,9 @@
-import {AfterViewInit, Component, ElementRef, OnInit, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, Inject, forwardRef, ElementRef, OnInit, ViewChild} from '@angular/core';
 import {FormAddProjectComponent} from "./form-add-project/form-add-project.component";
 import {ProjectHttpService} from "../../../../services/project.http.service";
 import {Project} from "../../../../models/project/project";
+import {MatPaginator} from "@angular/material";
+import {ProjectsComponent} from "../projects.component";
 
 @Component({
   selector: 'app-modal-add-project',
@@ -10,13 +12,16 @@ import {Project} from "../../../../models/project/project";
 })
 export class ModalAddProjectComponent implements AfterViewInit {
 
-  @ViewChild("tabsetAddProject", {read: ElementRef, static: false})
-  tabsetAddProject: ElementRef;
-
   @ViewChild(FormAddProjectComponent, {static: false})
   formAddProject: FormAddProjectComponent;
 
-  constructor(private projectHttpService: ProjectHttpService) { }
+  @ViewChild(ProjectsComponent, {static: false})
+  projectsComponent: any;
+
+  constructor(
+    private projectHttpService: ProjectHttpService,
+    @Inject(forwardRef(() => ProjectsComponent)) private _parent:ProjectsComponent
+  ) { }
 
   ngOnInit() {
 
@@ -24,14 +29,22 @@ export class ModalAddProjectComponent implements AfterViewInit {
 
   ngAfterViewInit() {
     console.log("After view init MODAL:");
-    console.log(this.formAddProject)
+    console.log(this.formAddProject);
+    console.log(this._parent);
   }
 
   submitCreateProjectForm() {
+    const self = this;
     console.log("Create Form submitted !!!");
     console.log(this.formAddProject.project.value);
     const project: Project  = new Project(null, this.formAddProject.project.value.title, null);
-    this.projectHttpService.createProject(project);
+    this.projectHttpService.createProject(project).subscribe(
+      result => {
+        console.log(result);
+        self._parent.dataSource.data.push(new Project(result.id, result.title));
+        self._parent.dataSource.data = self._parent.dataSource.data;
+      }
+    );
   }
 
 

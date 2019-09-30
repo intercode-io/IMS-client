@@ -9,6 +9,8 @@ import { AuthCallbackComponent } from './auth-callback/auth-callback.component';
 import { CallApiComponent } from './call-api/call-api.component';
 import { DashboardComponent } from "./dashboard/dashboard.component";
 import {ProjectsComponent} from "./dashboard/projects/projects.component";
+import {ActivityComponent} from "./dashboard/activity/activity.component";
+import {TrackerComponent} from "./dashboard/tracker/tracker.component";
 
 const routes: Routes = [
   {
@@ -28,7 +30,10 @@ const routes: Routes = [
     path: 'dashboard',
     component: DashboardComponent,
     children: [
-      {path: 'projects', component: ProjectsComponent}
+      {path: 'projects', component: ProjectsComponent},
+      {path: 'activity', component: ActivityComponent},
+      {path: 'tracker', component: TrackerComponent}
+
     ]
   },
   {

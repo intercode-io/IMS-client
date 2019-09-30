@@ -1,0 +1,48 @@
+<p>activity works!</p>
+<form [formGroup]="activityForm" (ngSubmit)="onSubmit()"
+  class="form-horizontal">
+  <div class="panel panel-primary">
+    <div class="panel-heading">
+      <h3 class="panel-title">Add activity</h3>
+    </div>
+
+    <div class="panel-body">
+
+      <div class="form-group">
+        <p>====TESTING ZONE=====</p>
+        <p>Select the project:</p>
+
+        <ul>
+          <p>hello1</p>
+
+          <li *ngFor="let project of dataService.observableList | async">
+            {{project.title}} {{"hello"}}
+            <p>hello</p>
+          </li>
+        </ul>
+
+        <p>===END OF TESTING ZONE====</p>
+      </div>
+
+      <div class="form-group">
+        <label class="co-sm-2 control-label" for="startTime">Start Time</label>
+        <div class="co-sm-8">
+          <input id="startTime" formControlName="startTime" type="text" class="form-control">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="col-sm-2 control-label" for="endTime">End Time</label>
+        <div class="col-sm-8">
+          <input id="endTime" formControlName="endTime" type="text" class="form-control">
+          <p></p>
+          <p></p>
+        </div>
+      </div>
+
+    </div>
+  <div class="panel-footer">
+    <button class="btn btn-primary" type="submit">Save</button>
+  </div>
+  </div>
+</form>

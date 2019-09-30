@@ -1,17 +1,31 @@
-import {HttpService} from "./http.service";
+import {BaseHttpService} from "./baseHttp.service";
 import {Injectable} from "@angular/core";
-import {Project} from "../models/project/project";
+import {Project, ProjectInterface} from "../models/project/project";
 import {HttpClient} from "@angular/common/http";
+import {ProjectUserPermissions} from "../models/privileges/project.user.permissions";
 
 @Injectable()
-export class ProjectHttpService {
-  constructor (private http: HttpClient) {}
+export class ProjectHttpService extends BaseHttpService {
+
+  constructor (private http: HttpClient) {
+    super()
+  }
 
   createProject(project: Project) {
-    this.http.post('http://localhost:5010/api/project/create', project).subscribe(json => {
-        debugger;
-        console.log(json);
-      }
-    );
+    return this.http.post<ProjectInterface>(this.baseUrl+"/api/project/create", project);
+  }
+
+  getProjectList(userId: Number){
+    return this.http.get<ProjectInterface[]>(this.baseUrl+"/api/project/getList/" + userId);
+  }
+
+  getProjectUserPermission(projectId: Number, userId: Number){
+    return this.http.get<ProjectUserPermissions>(this.baseUrl+`/api/project/getPermissions/projectId=${projectId}&userId=${userId}`)
+  }
+
+  //addActivity()
+
+  getProjectUserActivityList(projectIds: Number[], userId: number) {
+    // return this.http.post<ProjectUserPermissions>(this.baseUrl+`/api/project/getPermissions/projectId=${}&userId=${userId}`)
   }
 }
