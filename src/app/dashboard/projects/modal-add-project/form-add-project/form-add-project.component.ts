@@ -26,8 +26,4 @@ export class FormAddProjectComponent implements AfterViewInit {
     console.log("AVI Form add Project: createProjectForm: ");
     console.log(this.createProjectFormElement)
   }
-
-  createProject(){
-    console.log("Project created!!! ::: " + this.project.value.title);
-  }
 }

@@ -3,7 +3,7 @@
     <ng-template ngbTabTitle><b>1. General</b></ng-template>
     <ng-template ngbTabContent>
 
-      <form [formGroup]="project" (ngSubmit)="createProject()" #createProjectForm>
+      <form [formGroup]="form" #createProjectForm>
         <label>
           Project Title:
           <input type="text" formControlName="title">

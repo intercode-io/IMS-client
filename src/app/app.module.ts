@@ -22,7 +22,13 @@ import {ProjectHttpService} from "../services/project.http.service";
 import {MatTableModule} from '@angular/material/table';
 import { ActivityComponent } from './dashboard/activity/activity.component';
 import { TrackerComponent } from './dashboard/tracker/tracker.component';
-import {DataService} from "./dashboard/activity/Services/DataService";
+import { ModalAddActivityComponent } from './dashboard/activity/modal-add-activity/modal-add-activity.component';
+import {ActivityHttpService} from "../services/activity.http.service";
+import {DatePipe} from "@angular/common";
+import {MatNativeDateModule} from "@angular/material/core";
+import {MatFormFieldModule} from "@angular/material/form-field";
+import {MatSelectModule} from "@angular/material/select";
+import {BrowserAnimationsModule, NoopAnimationsModule} from "@angular/platform-browser/animations";
 
 @NgModule({
   declarations: [
@@ -37,7 +43,8 @@ import {DataService} from "./dashboard/activity/Services/DataService";
     FormAddProjectComponent,
     DashboardComponent,
     ActivityComponent,
-    TrackerComponent
+    TrackerComponent,
+    ModalAddActivityComponent
   ],
   imports: [
     NgbModule,
@@ -45,12 +52,17 @@ import {DataService} from "./dashboard/activity/Services/DataService";
     AppRoutingModule,
     HttpClientModule,
     ReactiveFormsModule,
-    MatTableModule
+    MatTableModule,
+    MatFormFieldModule,
+    MatSelectModule,
+    NoopAnimationsModule
   ],
   providers: [
     BaseHttpService,
     ProjectHttpService,
-    DataService
+    ActivityHttpService,
+    DatePipe,
+    BrowserAnimationsModule
   ],
   bootstrap: [AppComponent]
 })
