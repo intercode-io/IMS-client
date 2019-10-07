@@ -14,15 +14,17 @@
 
           <div class="panel-body">
             <form [formGroup]="activityForm">
-              <mat-form-field>
-                  <mat-label>Select project</mat-label>
-                  <mat-select>
-                    <mat-option *ngFor="let project of observableProjectList | async" >
-                      {{project.title}}
-                    </mat-option>
-                  </mat-select>
-                </mat-form-field>
+
+              <label for="projectNamesSelect">Project Name</label>
+              <select formControlName="projectName" id="projectNamesSelect">
+                <option *ngFor="let project of projectList" [value]="project.id">
+                  {{project.title}}
+                </option>
+              </select>
+
                 <br>
+                <br>
+
                 <div class="form-group" >
                   <label class="co-sm-2 control-label" for="startTime">Start Time</label>
                   <div class="co-sm-8">
@@ -47,7 +49,8 @@
       <div class="modal-footer">
         <button type="button" class="btn btn-outline-danger" data-dismiss="modal">Cancel</button>
         <!--        <button class="btn btn-outline-primary" (click)="tabsetAddProject.select('tab-selectbyid2')">Go To Next</button>-->
-        <button class="btn btn-outline-primary" (click)="submitCreateProjectForm()">Create Project</button>
+        <button type="submit" class="btn btn-outline-primary" [disabled]="!activityForm.valid"
+                (click)="submitCreateActivityForm()">Create Project</button>
       </div>
     </div>
   </div>
