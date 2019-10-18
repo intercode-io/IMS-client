@@ -1,10 +1,15 @@
-import {AfterViewInit, Component, OnInit, ViewChild} from '@angular/core';
-import {Activity} from "../../../../models/activity/activity";
-import {ProjectHttpService} from "../../../../services/project.http.service";
-import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
-import {Project, ProjectInterface} from "../../../../models/project/project";
-import {MatTableDataSource} from "@angular/material/table";
-import {BehaviorSubject, Observable, of } from "rxjs";
+import {AfterViewInit, Component, forwardRef, Inject, OnInit, ViewChild} from '@angular/core';
+import {Activity} from '../../../../models/activity/activity';
+import {ProjectHttpService} from '../../../../services/project.http.service';
+import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
+import {Project, ProjectInterface} from '../../../../models/project/project';
+import {MatTableDataSource} from '@angular/material/table';
+import { NgModule } from '@angular/core';
+import { OwlDateTimeModule, OwlNativeDateTimeModule, OWL_DATE_TIME_FORMATS} from 'ng-pick-datetime';
+import {MatDatepickerInputEvent} from '@angular/material/datepicker';
+import {ActivityHttpService} from '../../../../services/activity.http.service';
+import {ActivityComponent} from '../activity.component';
+import {AuthService} from '../../../services/auth.service';
 
 @Component({
   selector: 'modal-add-activity',
@@ -14,88 +19,94 @@ import {BehaviorSubject, Observable, of } from "rxjs";
 
 export class ModalAddActivityComponent implements AfterViewInit {
 
-  //projects: Observable<Project[]> = new Observable<Project[]>();
+  // projects: Observable<Project[]> = new Observable<Project[]>();
 
-  //projectList = new BehaviorSubject<ProjectInterface[]>([]);
+  // projectList = new BehaviorSubject<ProjectInterface[]>([]);
   projectList = [];
+  date: MatDatepickerInputEvent<Date>;
+
+  minDate = new Date(2000, 4, 12);
+  maxDate = new Date(2030, 4, 22);
+  startDate = new Date(2019, 10, 9);
+  events: string[] = [];
 
   activityForm = new FormGroup({
-    projectName: new FormControl("",[Validators.required]),
-    startTime: new FormControl("",[Validators.required]),
-    endTime: new FormControl("",[Validators.required])
-  });
+    projectName: new FormControl(), // "", [Validators.required]
+    date: new FormControl(new Date()),
+    hours: new FormControl(),
+    description: new FormControl(),
+    startTime: new FormControl(),
+    endTime: new FormControl()
+  }, { updateOn: 'change' });
 
-  dateModel: Date = new Date();
-  stringDateModel: string = new Date().toString();
-  stringDateModel2: string = new Date().toString();
+  @ViewChild(ActivityComponent, {static: false})
+  activityComponent: any;
 
   constructor(
+    protected  activityHttpService: ActivityHttpService,
     protected  projectHttpService: ProjectHttpService,
-    private formBuilder: FormBuilder
-  )   { }
+    protected authService: AuthService,
+    private formBuilder: FormBuilder,
+    @Inject(forwardRef(() => ActivityComponent)) private _parent: ActivityComponent
+  ) {
+  }
 
   ngOnInit() {
-    //console.log("projects before func: ", this.observableProjectList)
+    // console.log("projects before func: ", this.observableProjectList)
     this.getProjects();
-    console.log("projects in modal: ", this.projectList);
+    console.log('projects in modal: ', this.projectList);
   }
 
   ngAfterViewInit(): void {
-    console.log("AVI Form add Activity: addActivity: ");
+    console.log('AVI Form add Activity: addActivity: ');
   }
 
   submitCreateActivityForm(): void {
-    var vals = this.activityForm.value;
-    console.log("Create activityForm submited!");
-    //TODO Change user_id
-    const activity: Activity = new Activity(null, vals.projectName, null,
-      1, null, null, vals.startTime, vals.endTime);
+    let vals = this.activityForm.value;
 
-    console.log(activity);
+    const partsStartTime =  vals.startTime.toString().split(':');
+    const partsHours =  vals.hours.toString().split(':');
+    const hoursInMinutes = parseInt(partsHours[0], 10) * 60 + parseInt(partsHours[1], 10);
 
+    const startDateTime = vals.date;
+    startDateTime.setHours(parseInt(partsStartTime[0], 10), parseInt(partsStartTime[1], 10), 0);
+    let endDateTime = new Date(startDateTime);
+    endDateTime.setHours(endDateTime.getHours() + parseInt(partsHours[0], 10));
+    endDateTime.setMinutes(endDateTime.getMinutes() + parseInt(partsHours[1], 10));
+
+    // TODO Change user_id
+    // TODO implement description
+    const activity: Activity = new Activity(0, vals.projectName,
+      this.authService.getUserId(), vals.description, hoursInMinutes, startDateTime, endDateTime);
+
+    const self = this;
+    this.activityHttpService.createActivity(activity).subscribe(
+      result => {
+        // console.log('Activity in subscription: ', activity);
+        self._parent.activityDataSource.data.push(new Activity(0, result.projectId, result.userId,
+          result.description, result.hours, result.timeStart, result.timeEnd));
+        self._parent.activityDataSource.data = self._parent.activityDataSource.data;
+      }
+    );
   }
-
-  // submitCreateProjectForm() {
-  //   const self = this;
-  //   console.log("Create Form submitted !!!");
-  //   console.log(this.formAddProject.project.value);
-  //   const project: Project  = new Project(null, this.formAddProject.project.value.title, null);
-  //   this.projectHttpService.createProject(project).subscribe(
-  //     result => {
-  //       console.log(result);
-  //       self._parent.dataSource.data.push(new Project(result.id, result.title));
-  //       self._parent.dataSource.data = self._parent.dataSource.data;
-  //     }
-  //   );
-  // }
 
   getProjects() {
     const self = this;
-    this.projectHttpService.getProjectList(1)
+    this.projectHttpService.getProjectList(this.authService.getUserId())
       .subscribe(
         result => {
           const projects = result.map(
             item => new Project(item.id, item.title)
           );
           self.projectList = projects;
-          //self.projectList = new BehaviorSubject<Project[]>(projects);
-          //self.projectList.next(projects);
-          //console.log("obs List11111: ", self.observableProjectList)
+          // self.projectList = new BehaviorSubject<Project[]>(projects);
+          // self.projectList.next(projects);
+          // console.log("obs List11111: ", self.observableProjectList)
           this.projectList = projects;
-          self.activityForm.controls.orders.patchValue(this.projectList[0].id);
-          console.log("obs List: ", self.projectList)
+          // todo look for how it works:
+          self.activityForm.controls.projectName.patchValue(this.projectList[0].id);
+          console.log('obs List: ', self.projectList);
         }
-      )
+      );
   }
-
-  // async orders
-
-// synchronous orders
-// this.orders = this.getOrders();
-// this.form.controls.orders.patchValue(this.orders[0].id);
-
-
-
-//get observableProjectList(): Observable<ProjectInterface[]> { return this.projectList.asObservable() }
 }
-

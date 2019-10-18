@@ -1,4 +1,15 @@
+<datepicker #rangeDatePicker></datepicker>
+<br>
+<br>
+<modal-select-project #modalSelectProject></modal-select-project>
+<br>
+<br>
+<button (click)="generateActivityFilter()">Submit ActivityFilter</button>
+<br>
+<br>
+
 <div class="row">
+
   <table class="table table-bordered table-hover" mat-table [dataSource]="activityDataSource">
 
     <!-- Position Column -->
@@ -26,21 +37,21 @@
     <ng-container matColumnDef="hours">
       <tr>
         <th mat-header-cell *matHeaderCellDef>Duration</th>
-        <td mat-cell *matCellDef="let element"> {{element.hours}} {{"Hours"}}</td>
+        <td mat-cell *matCellDef="let element"> {{element.hours}} {{" minutes"}}</td>
       </tr>
     </ng-container>
 
     <ng-container matColumnDef="startTime">
       <tr>
         <th mat-header-cell *matHeaderCellDef>Start Time</th>
-        <td mat-cell *matCellDef="let element"> {{element.startTime}}</td>
+        <td mat-cell *matCellDef="let element"> {{element.timeStart | date: "HH:mm dd-MM-yyyy"}}</td>
       </tr>
     </ng-container>
 
     <ng-container matColumnDef="endTime">
       <tr>
         <th mat-header-cell *matHeaderCellDef>End time</th>
-        <td mat-cell *matCellDef="let element"> {{element.endTime}}</td>
+        <td mat-cell *matCellDef="let element"> {{element.timeEnd | date: "HH:mm dd-MM-yyyy"}}</td>
       </tr>
     </ng-container>
 

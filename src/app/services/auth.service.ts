@@ -9,7 +9,6 @@ export class AuthService {
 
   private manager = new UserManager(getClientSettings());
   private user: User = null;
-
   constructor() {
     this.manager.getUser().then(user => {
       this.user = user;
@@ -32,6 +31,11 @@ export class AuthService {
     return this.manager.signinRedirect();
   }
 
+  getUserId() {
+    return 2;
+    // return this.user.id_token;
+  }
+
   completeAuthentication(): Promise<void> {
     return this.manager.signinRedirectCallback().then(user => {
       window.localStorage.setItem("auth_token", user.id_token);
@@ -40,6 +44,7 @@ export class AuthService {
     });
   }
 }
+
 
 export function getClientSettings(): UserManagerSettings {
   return {

@@ -1,2 +1,30 @@
 /* You can add global styles to this file, and also import other style files */
 @import "assets/styles/index";
+@import "~ng-pick-datetime/assets/style/picker.min.css";
+@import '~mat-range-datepicker/theming';
+@import '~@angular/material/prebuilt-themes/deeppurple-amber.css';
+//@import '~saturn-datepicker/bundle.css';
+//@import '~@angular/material/prebuilt-themes/deeppurple-amber.css';
+
+//todo add
+.mat-datepicker-1{
+  z-index: 1100;
+}
+
+div.cdk-overlay-container{
+  z-index: 1200;
+}
+
+//body {
+//  font-family: Roboto, Arial, sans-serif;
+//  margin: 0;
+//}
+//
+//.basic-container {
+//  padding: 30px;
+//}
+//
+//.version-info {
+//  font-size: 8pt;
+//  float: right;
+//}

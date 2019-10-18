@@ -3,35 +3,34 @@ import {string} from "prop-types";
 export interface ActivityInterface {
   id: number;
   projectId: number;
+  // projectTitle: string;
   userId: number;
   description: string;
   hours: number;
-  startTime: string;
-  endTime: string;
-
+  timeStart: Date;
+  timeEnd: Date;
 }
 
 export class Activity implements ActivityInterface {
   id: number;
   projectId: number;
-  projectTitle: string;
+  //projectTitle: string;
   userId: number;
   description: string;
   hours: number;
-  startTime: string;
-  endTime: string;
+  timeStart: Date;
+  timeEnd: Date;
 
-
-  constructor(id: number, projectId: number, projectTitle: string, userId: number,
+  constructor(id: number, projectId: number, userId: number,
               description: string = null, hours: number,
-              startTime: string, endTime: string) {
+              startTime: Date, endTime: Date) {
     this.id = id;
     this.projectId = projectId;
-    this.projectTitle = projectTitle;
+    // this.projectTitle = projectTitle;
     this.userId = userId;
     this.description = description;
     this.hours = hours;
-    this.startTime = startTime;
-    this.endTime = endTime;
+    this.timeStart = startTime;
+    this.timeEnd = endTime;
   }
 }

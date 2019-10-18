@@ -3,6 +3,7 @@ import {MatPaginator} from '@angular/material/paginator';
 import {MatTableDataSource} from '@angular/material/table';
 import {Project, ProjectInterface} from "../../../models/project/project";
 import {ProjectHttpService} from "../../../services/project.http.service";
+import {AuthService} from '../../services/auth.service';
 
 @Component({
   selector: 'app-projects',
@@ -19,7 +20,8 @@ export class ProjectsComponent implements AfterViewInit {
   paginator: MatPaginator;
 
   constructor(
-    protected  projectHttpService: ProjectHttpService
+    protected  projectHttpService: ProjectHttpService,
+    protected authService: AuthService,
   ) { }
 
   ngOnInit() {
@@ -31,7 +33,7 @@ export class ProjectsComponent implements AfterViewInit {
 
   getProjects() {
     const self = this;
-    this.projectHttpService.getProjectList(1)
+    this.projectHttpService.getProjectList(this.authService.getUserId())
       .subscribe(
       result => {
         const projects = result.map(
